@@ -1,0 +1,17 @@
+REQUIREMENTS TO INSTALL FLASK-MYSQLDB ON LINUX UBUNTU
+
+. First install mysqlclient
+# You may need to install the Python 3 and MySQL development headers and libraries like so:
+
+sudo apt-get install python3-dev default-libmysqlclient-dev build-essential pkg-config
+
+. Then you can proceed to install mysqlclient via
+pip install mysqlclient
+
+
+# Set up 
+sudo apt-get install python3-venv # install venv in linux (if needed)
+python3 -m venv .venv # create a venv named ".venv"
+source .venv/bin/activate # start venv (if needed)
+
+pip list # ver lista de pips instalados

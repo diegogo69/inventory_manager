@@ -1,13 +1,7 @@
-# Set up 
-sudo apt-get install python3-venv # install venv in linux (if needed)
-python3 -m venv .venv # create a venv named ".venv"
-source .venv/bin/activate # start venv (if needed)
-
-pip list # ver lista de pips instalados
-
-flask
+Flask
 Flask-Session
-flask-login
-flask-mysqldb
-flask-WTF
-pymysql 
+Flask-Login
+mysqlclient
+Flask-MySQLdb
+Flask-WTF
+PyMySQL
