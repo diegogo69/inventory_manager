@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container">
+    <a href="/add-hw-item">Añadir un componente de hardware por separado (sin equipo)</a>
+    
+    <h1 style="text-align: center">Datos generales del equipo</h1>
+    <form action="/add-register" method="post" class="row">
+      
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="col-md-4">
+        <label for="nombre_pc">Nombre del equipo:</label>
+        <input name="nombre_pc" placeholder="Nombre_Equipo" type="text" autocomplete="off" class="form-control mb-2">
+      </div>
+      <div class="col-md-4">
+        <label for="tipo_pc">Tipo:</label>
+        <select name="tipo_pc" class="form-control mb-2">
+          <option value="pc">PC (escritorio)</option>
+          <option value="laptop">Laptop</option>
+        </select>
+        <!-- <input name="tipo_pc" placeholder="Tipo" type="text" autocomplete="off" class="form-control mb-2"> -->
+      </div>
+      <div class="col-md-4">
+        <label for="marca_pc">Marca:</label>
+        <input name="marca_pc" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+      </div>
+  
+      <div class="col-md-4">
+        <label for="modelo_pc">Modelo:</label>
+        <input name="modelo_pc" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+      </div>
+      <div class="col-md-4">
+        <label for="n_identificador_pc">N° identificador:</label>
+        <input name="n_identificador_pc" placeholder="N° identificador" type="text" autocomplete="off" class="form-control mb-2">
+      </div>
+      <div class="col-md-4">
+        <label for="ubicacion_pc">Ubicacion:</label>
+        <input name="ubicacion_pc" placeholder="Ubicacion" type="text" autocomplete="off" class="form-control mb-2">
+      </div>
+  
+      <div class="col-md-4">
+        <label for="estado_pc">Estado del equipo:</label>
+        <input name="estado_pc" placeholder="Estado" type="text" autocomplete="off" class="form-control mb-2">
+      </div>
+      <div class="col-md-4">
+        <label for="observaciones_pc">Observaciones:</label>
+        <input name="observaciones_pc" placeholder="Observaciones" type="text" autocomplete="off" class="form-control mb-2">
+      </div>
+      <div class="col-md-4">
+        </div>
+  
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-primary my-4">Registrar</button>
+      </div>
+    </form>
+  </div>
+        
+{% endblock %}

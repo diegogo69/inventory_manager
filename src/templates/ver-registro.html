@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <h3 class="text-center mt-4">Datos del Equipo</h3>
+    <table class="table table-striped table-hover table-bordered text-center align-middle mb-4">
+        <thead class="table-dark">
+            <td>Nombre</td>
+            <td>Tipo</td>
+            <td>Marca</td>
+            <td>Modelo</td>
+            <td>N° identificador</td>
+            <td>Ubicacion</td>
+            <td>Estado</td>
+            <td>Observaciones</td>
+        </thead>
+        <tbody>
+            {% for equipo in datos["equipos"] %}
+            <tr>
+                <td>{{ equipo["nombre"].title() }}</td>
+                <td>{{ equipo["tipo"].title() }}</td>
+                <td>{{ equipo["marca"].title() }}</td>
+                <td>{{ equipo["modelo"].title() }}</td>
+                <td>{{ equipo["n_identificador"].title() }}</td>
+                <td>{{ equipo["ubicacion"].title() }}</td>
+                <td>{{ equipo["estado"].title() }}</td>
+                <td>{{ equipo["observaciones"].title() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <h3 class="text-center mt-4">Datos de componentes de hardware</h3>
+    <table class="table table-striped table-hover table-bordered table-sm bg-white text-center align-middle mb-4">
+        <thead class="table-dark">
+            <td>Tipo</td>
+            <td>Marca</td>
+            <td>Modelo</td>
+            <td>N° Serie</td>
+            <td>Especificaciones</td>
+            <td>Capacidad</td>
+        </thead>
+        <tbody>
+            {% for hw in datos["hw"] %}
+            <tr>
+                <td>{{ hw["tipo"].title() }}</td>
+                <td>{{ hw["marca"].title() }}</td>
+                <td>{{ hw["modelo"].title() }}</td>
+                <td>{{ hw["n_serie"].title() }}</td>
+                <td>{{ hw["especificaciones"].title() }}</td>
+                <td>{{ hw["capacidad"].title() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <h3 class="text-center mt-4">Datos de sistema operativo</h3>
+    <table class="table table-striped table-hover table-bordered table-sm bg-white text-center align-middle mb-4">
+        <thead class="table-dark">
+            <td>Nombre</td>
+            <td>Edicion</td>
+            <td>Arquitectura</td>
+            <td>Desarrollador</td>
+            <td>Licencia</td>
+        </thead>
+        <tbody>
+            {% for so in datos["so"] %}
+            <tr>
+                <td>{{ so["nombre"].title() }}</td>
+                <td>{{ so["edicion"].title() }}</td>
+                <td>{{ so["arquitectura"].title() }}</td>
+                <td>{{ so["desarrollador"].title() }}</td>
+                <td>{{ so["licencia"].title() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <h3 class="text-center mt-4">Datos de programas y software</h3>
+    <table class="table table-striped table-hover table-bordered table-sm bg-white text-center align-middle mb-4">
+        <thead class="table-dark">
+            <td>Categoria</td>
+            <td>Nombre</td>
+            <td>Version</td>
+            <td>Desarrollador</td>
+            <td>Licencia</td>
+        </thead>
+        <tbody>
+            {% for sw in datos["sw"] %}
+            <tr>
+                <td>{{ sw["categoria"].title() }}</td>
+                <td>{{ sw["nombre"].title() }}</td>
+                <td>{{ sw["version"].title() }}</td>
+                <td>{{ sw["desarrollador"].title() }}</td>
+                <td>{{ sw["licencia"].title() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock %}

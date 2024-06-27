@@ -1,0 +1,432 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="container-fluid">
+  <h1>Registrar componentes de hardware</h1>
+  <form action="/add-hardware/{{ id_equipo }}" method="post" id="items_form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      
+      <!-------- PROCESADOR ---------->
+      <fieldset id="cpus-container" class="mb-4">
+          <legend>CPU</legend>
+          <div class="row">
+            <div class="col-md-6">
+              <label for="marca_hw">Marca:</label>
+              <select name="marca_hw" class="form-select mb-2" aria-label="Marca">
+                <option value="intel">Intel</option>
+                <option value="amd">AMD</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="modelo_hw">Modelo:</label>
+              <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label for="especificaciones_hw">Especificaciones:</label>
+              <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+            </div>
+            <!-- <div class="col-md-6"> -->
+              <!-- <label for="n_serie_hw">N° Serie:</label> -->
+              <input name="n_serie_hw" value="" type="hidden" autocomplete="off" class="form-control mb-2">
+            <!-- </div> -->
+          </div>
+          <input name="capacidad_hw" value="" type="hidden">
+          <input name="tipo_hw" value="cpu" type="hidden">
+          <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+        </fieldset>
+              
+
+      <!-------- RAM ---------->
+      <fieldset id="rams-container" class="mb-4">
+          <legend>Memoria RAM</legend>
+          <div class="ram-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="capacidad_hw">Capacidad:</label>
+                <input name="capacidad_hw" placeholder="Capacidad" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="especificaciones_hw">Especificaciones:</label>
+                <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+              </div>  
+              <!-- <div class="col-md-6">
+                <label for="n_serie_hw">N° Serie:</label> -->
+                <input name="n_serie_hw" placeholder="N° Serie" type="hidden" autocomplete="off" class="form-control mb-2">
+              <!-- </div> -->
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <input name="tipo_hw" value="ram" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addRamForm()">Añadir RAM</button>
+
+
+        <!-------- ALMACENAMIENTO ---------->
+      <fieldset id="alms-container" class="mb-4">
+          <legend>Unidades de almacenamiento</legend>
+          <div class="alm-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="capacidad_hw">Capacidad:</label>
+                <input name="capacidad_hw" placeholder="Capacidad" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="n_serie_hw">N° Serie:</label>
+                <input name="n_serie_hw" placeholder="N° Serie" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="especificaciones_hw">Especificaciones:</label>
+                <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <input name="tipo_hw" value="almacenamiento" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+      </fieldset>
+          <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addAlmForm()">Añadir unidad</button>
+
+
+      <!-------- PLACA BASE ---------->
+      <fieldset id="placa-container" class="mb-4">
+          <legend>Placa Base</legend>
+          <div class="placa-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="n_serie_hw">N° Serie:</label>
+                <input name="n_serie_hw" placeholder="N° Serie" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="especificaciones_hw">Especificaciones:</label>
+                <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">  <input name="capacidad_hw" value="" type="hidden">
+                <input name="tipo_hw" value="placa" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        
+
+      <!-------- FUENTE DE PODER ---------->
+      <fieldset id="fuente-container" class="mb-4">
+          <legend>Fuente de poder</legend>
+          <div class="fuente-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="n_serie_hw">N° Serie:</label>
+                <input name="n_serie_hw" placeholder="N° Serie" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="especificaciones_hw">Especificaciones:</label>
+                <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">  <input name="capacidad_hw" value="" type="hidden">
+                <input name="tipo_hw" value="fuente" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        
+      <!-------- GRAFICA ---------->
+      <fieldset id="gpu-container" class="mb-4">
+          <legend>Tarjeta gráfica</legend>
+          <div class="gpu-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="capacidad_hw">Capacidad:</label>
+                <input name="capacidad_hw" placeholder="Capacidad" type="text" autocomplete="off" class="form-control mb-2">
+                </div>
+                <div class="col-md-6">
+                  <label for="especificaciones_hw">Especificaciones:</label>
+                  <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+                </div>
+                  <!--<div class="col-md-6">
+                    <label for="n_serie_hw">N° Serie:</label> -->
+                    <input name="n_serie_hw" placeholder="N° Serie" type="hidden" autocomplete="off" class="form-control mb-2">
+                  <!-- </div> -->
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <input name="tipo_hw" value="gpu" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        
+        <h3>Periféricos</h3>
+
+        <!------- MONITOR  ------->
+
+        <fieldset id="mon-container" class="mb-4">
+          <legend>Monitor</legend>
+          <div class="mon-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="n_serie_hw">N° Serie:</label>
+                <input name="n_serie_hw" placeholder="12345657890" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="especificaciones_hw">Especificaciones:</label>
+                <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input name="capacidad_hw" value="" type="hidden">
+                <input name="tipo_hw" value="monitor" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+  <!--       <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addMonForm()">Añadir monitor</button>
+  -->      
+        
+  <!-------- TECLADO --------->
+        <fieldset id="tec-container" class="mb-4">
+          <legend>Teclado</legend>
+          <div class="tec-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="n_serie_hw">N° Serie:</label>
+                <input name="n_serie_hw" placeholder="12345657890" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="especificaciones_hw">Especificaciones:</label>
+                <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input name="capacidad_hw" value="" type="hidden">
+                <input name="tipo_hw" value="teclado" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>      
+
+
+      <!-------- Mouse ---------->
+      <fieldset id="mou-container" class="mb-4">
+      <legend>Mouse</legend>
+      <div class="mou-form">
+          <div class="row">
+          <div class="col-md-6">
+              <label for="marca_hw">Marca:</label>
+              <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+          </div>
+          <div class="col-md-6">
+              <label for="modelo_hw">Modelo:</label>
+              <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+          </div>
+          </div>
+          <div class="row">
+          <div class="col-md-6">
+              <label for="n_serie_hw">N° Serie:</label>
+              <input name="n_serie_hw" placeholder="N° Serie" type="text" autocomplete="off" class="form-control mb-2">
+          </div>
+          <div class="col-md-6">
+              <label for="especificaciones_hw">Especificaciones:</label>
+              <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+          </div>
+          </div>
+          <div class="row">
+          <div class="col-md-12">
+              <input name="capacidad_hw" value="" type="hidden">
+              <input name="tipo_hw" value="mouse" type="hidden">
+              <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+          </div>
+          </div>
+      </div>
+      </fieldset>
+
+      
+      <!-------- IMPRESORA ---------->
+      <fieldset id="imp-container" class="mb-4">
+          <legend>Impresora</legend>
+          <div class="imp-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="n_serie_hw">N° Serie:</label>
+                <input name="n_serie_hw" placeholder="N° Serie" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="especificaciones_hw">Especificaciones:</label>
+                <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input name="capacidad_hw" value="" type="hidden">
+                <input name="tipo_hw" value="impresora" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        
+
+
+      <h3>Añadidos</h3>
+
+      <!-------- OTROS ---------->
+      <fieldset id="otro-container" class="mb-4">
+          <legend>Otro</legend>
+          <div class="otro-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="tipo_hw">Tipo:</label>
+                <select name="tipo_hw" class="form-control mb-2">
+                  <option value="red">Tarjeta de red</option>
+                  <option value="bluetooth">Adaptador de bluetooth</option>
+                  <option value="webcam">Cámara web</option>
+                  <option value="escaner">Escaner</option>
+                  <option value="altavoces">Altavoces</option>
+                  <option value="audifonos">Audifonos</option>
+                  <option value="otro">Otro</option>
+                  <option value="">Ninguno</option>
+
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="marca_hw">Marca:</label>
+                <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="modelo_hw">Modelo:</label>
+                <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="n_serie_hw">N° Serie:</label>
+                <input name="n_serie_hw" placeholder="N° Serie" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="especificaciones_hw">Especificaciones:</label>
+                <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <input name="capacidad_hw" value="" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addOtroForm()">Añadir otro</button>
+
+  </form>
+
+  <button form="items_form" type="submit" class="btn btn-primary my-4">Guardar</button>
+
+</div>
+
+
+<!-- JS dinamic form code -->
+<script src="/static/js/forms.js"> 
+
+</script>
+
+
+{% endblock %}

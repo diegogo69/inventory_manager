@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container">
+
+    <h1 style="text-align: center">Añadir un hardware sin equipo.</h1>
+
+    <form action="/add-hw-item" method="post" class="row">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <fieldset id="hwitem-container">
+            <h5 >Item N° 1</h5>
+            <div class="hwitem-form mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="tipo_hw">Tipo:</label>
+                        <select name="tipo_hw" class="form-control mb-2">
+                            <option value="case">Case</option>
+                            <option value="placa">Placa base</option>
+                            <option value="cpu">Procesador</option>
+                            <option value="ram">Tarjeta RAM</option>
+                            <option value="almacenamiento">Almacenamiento</option>
+                            <option value="fuente">Fuente de poder</option>
+
+                            <option value="monitor">Monitor</option>
+                            <option value="teclado">Teclado</option>
+                            <option value="mouse">Mouse</option>
+                            <option value="impresora">Impresora</option>
+
+
+                            <option value="red">Tarjeta de red</option>
+                            <option value="bluetooth">Adaptador de bluetooth</option>
+                            <option value="webcam">Cámara web</option>
+                            <option value="escaner">Escaner</option>
+                            <option value="altavoces">Altavoces</option>
+                            <option value="audifonos">Audifonos</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="marca_hw">Marca:</label>
+                        <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="modelo_hw">Modelo:</label>
+                        <input name="modelo_hw" placeholder="Modelo" type="text" autocomplete="off" class="form-control mb-2">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="n_serie_hw">N° Serie:</label>
+                        <input name="n_serie_hw" placeholder="N° Serie" type="text" autocomplete="off" class="form-control mb-2">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="especificaciones_hw">Especificaciones:</label>
+                        <input name="especificaciones_hw" placeholder="Especificaciones" type="text" autocomplete="off" class="form-control mb-2">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="capacidad_hw">Capacidad:</label>
+                        <input name="capacidad_hw" placeholder="Capacidad" type="text" autocomplete="off" class="form-control mb-2">
+                        <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addHwItemForm()">Añadir otro</button>
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary my-4">Registrar</button>
+        </div>
+    </form>
+</div>
+
+<!-- JS dinamic form code -->
+<script src="/static/js/forms.js"> 
+
+</script>
+
+{% endblock %}

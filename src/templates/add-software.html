@@ -1,0 +1,221 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="container-fluid">
+  <h1>Registrar componentes de software</h1>
+  <form action="/add-software/{{ id_equipo }}" method="post" id="items_form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      
+      <!-------- SISTEMA OPERATIVO ---------->
+      <fieldset id="so-container" class="mb-4">
+          <legend>Sistema Operativo</legend>
+          <div class="so-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="nombre_so">Nombre:</label>
+                <select name="nombre_so" class="form-control mb-2">
+                  <option value="windows">Windows</option>
+                  <option value="linux">Linux</option>
+                  <option value="macos">MacOS</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="edicion_so">Edición:</label>
+                <input name="edicion_so" placeholder="Windows 7 Professional" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="arq_so">Arquitectura:</label>
+                <select name="arq_so" class="form-control mb-2">
+                  <option value="32 bits">32 bits</option>
+                  <option value="64 bits">64 bits</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="desarrollador_so">Desarrollador:</label>
+                <input name="desarrollador_so" placeholder="Microsoft" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="licencia_so">Licencia:</label>
+                <input name="licencia_so" placeholder="Microsoft" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <input name="id_equipo_so" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addSoForm()">Añadir otro</button>
+
+
+
+
+      <!-------- NAVEGADOR ---------->
+      <fieldset id="nav-container" class="mb-4">
+          <legend>Navegador</legend>
+          <div class="nav-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="nombre_sw">Nombre:</label>
+                <input name="nombre_sw" placeholder="Nombre del Navegador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="version_sw">Versión:</label>
+                <input name="version_sw" placeholder="Versión" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="desarrollador_sw">Desarrollador:</label>
+                <input name="desarrollador_sw" placeholder="Desarrollador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <input name="licencia_sw" value="" type="hidden">
+                <input name="categoria_sw" value="navegador" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addNavForm()">Añadir otro</button>
+
+
+      <!-------- Ofimática ---------->
+      <fieldset id="ofi-container" class="mb-4">
+          <legend>Ofimática</legend>
+          <div class="ofi-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="nombre_sw">Nombre:</label>
+                <input name="nombre_sw" placeholder="Nombre del Software" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="version_sw">Versión:</label>
+                <input name="version_sw" placeholder="Versión" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="desarrollador_sw">Desarrollador:</label>
+                <input name="desarrollador_sw" placeholder="Desarrollador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="licencia_sw">Licencia:</label>
+                <input name="licencia_sw" placeholder="Licencia" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input name="categoria_sw" value="ofimatica" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addOfiForm()">Añadir otro</button>
+
+
+      <!-------- SEGURIDAD Y ANTIVIRUS ---------->
+      <fieldset id="seg-container" class="mb-4">
+          <legend>Seguridad y antivirus</legend>
+          <div class="seg-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="nombre_sw">Nombre:</label>
+                <input name="nombre_sw" placeholder="Nombre del Software" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="version_sw">Versión:</label>
+                <input name="version_sw" placeholder="Versión" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="desarrollador_sw">Desarrollador:</label>
+                <input name="desarrollador_sw" placeholder="Desarrollador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="licencia_sw">Licencia:</label>
+                <input name="licencia_sw" placeholder="Licencia" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input name="categoria_sw" value="seguridad" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addSegForm()">Añadir otro</button>
+
+
+      <!-------- Otros ---------->
+      <fieldset id="otrosw-container" class="mb-4">
+          <legend>Demás programas</legend>
+          <div class="otrosw-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="categoria_sw">Categoría:</label>
+                <select name="categoria_sw" class="form-control mb-2">
+                  <option selected value="">Ninguno</option>
+                  <option value="multimedia">Multimedia</option>
+                  <option value="diseño grafico">Diseño grafico</option>
+                  <option value="diseño audiovisual">Diseño Audiovisual</option>
+                  <option value="sistema">Sistema</option>
+                  <option value="administrativo">Administrativo</option>
+                  <option value="comunicacion">Comunicación</option>
+                  <option value="desarrollo">Desarrollo</option>
+                  <option value="videojuego">Juegos</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="nombre_sw">Nombre:</label>
+                <input name="nombre_sw" placeholder="Nombre del Software" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="version_sw">Versión:</label>
+                <input name="version_sw" placeholder="Versión" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="desarrollador_sw">Desarrollador:</label>
+                <input name="desarrollador_sw" placeholder="Desarrollador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="licencia_sw">Licencia:</label>
+                <input name="licencia_sw" placeholder="Licencia" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addOtroSwForm()">Añadir otro</button>
+
+
+  </form>
+
+  <button form="items_form" type="submit" class="btn btn-primary my-4">Guardar</button>
+  
+</div>
+
+
+
+<!-- JS dinamic form code -->
+<script src="/static/js/forms.js"> 
+
+</script>
+
+
+{% endblock %}

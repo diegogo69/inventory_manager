@@ -1,0 +1,242 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <h1>Registrar componentes de software</h1>
+    <form action="/edit-software/{{ id_equipo }}" method="post" id="items_form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      
+    <!-------- SISTEMA OPERATIVO ---------->
+    <fieldset id="so-container" class="mb-4">
+        <legend>Sistema Operativo</legend>
+
+        {% for so in sos %}
+        <div class="so-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="nombre_so">Nombre:</label>
+                <select name="nombre_so" class="form-control mb-2">
+                  <option value="windows" {% if so["nombre"] == "windows" %} selected {% endif %}>Windows</option>
+                  <option value="linux" {% if so["nombre"] == "linux" %} selected {% endif %}>Linux</option>
+                  <option value="macos" {% if so["nombre"] == "macos" %} selected {% endif %}>MacOS</option>
+                  <option value="otro" {% if so["nombre"] == "otro" %} selected {% endif %}>Otro</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="edicion_so">Edición:</label>
+                <input name="edicion_so" value="{{ so['edicion']}}" placeholder="Windows 7 Professional" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="arq_so">Arquitectura:</label>
+                <select name="arq_so" class="form-control mb-2">
+                  <option value="32 bits" {% if so["arquitectura"] == "32 bits" %} selected {% endif %}>32 bits</option>
+                  <option value="64 bits" {% if so["arquitectura"] == "64 bits" %} selected {% endif %}>64 bits</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="desarrollador_so">Desarrollador:</label>
+                <input name="desarrollador_so" value="{{ so['desarrollador']}}" placeholder="Microsoft" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="licencia_so">Licencia:</label>
+                <input name="licencia_so" value="{{ so['licencia']}}" placeholder="Microsoft" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <input name="id_equipo_so" value="{{ id_equipo }}" type="hidden">
+                <input name="id_so" value="{{ so['id_so'] }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </fieldset>
+    <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addSoForm()">Añadir otro</button>
+
+
+
+    <!-------- NAVEGADOR ---------->
+    <fieldset id="nav-container" class="mb-4">
+        <legend>Navegador</legend>
+
+        {% for sw_nav in sw["navs"] %}
+        <div class="nav-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="nombre_sw">Nombre:</label>
+                <input name="nombre_sw" value="{{ sw_nav['nombre']}}" placeholder="Nombre del Navegador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="version_sw">Versión:</label>
+                <input name="version_sw" value="{{ sw_nav['version']}}" placeholder="Versión" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="desarrollador_sw">Desarrollador:</label>
+                <input name="desarrollador_sw" value="{{ sw_nav['desarrollador']}}" placeholder="Desarrollador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <input name="licencia_sw" value="" type="hidden">
+                <input name="categoria_sw" value="navegador" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+                <input name="id_sw" value="{{ sw_nav['id_sw'] }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+    </fieldset>
+    <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addNavForm()">Añadir otro</button>
+
+
+
+    
+    <!-------- Ofimática ---------->
+    <fieldset id="ofi-container" class="mb-4">
+        <legend>Ofimática</legend>
+
+      {% for sw_ofi in sw["ofis"] %}
+      <div class="ofi-form">
+        <div class="row">
+          <div class="col-md-6">
+            <label for="nombre_sw">Nombre:</label>
+            <input name="nombre_sw" value="{{ sw_ofi['nombre']}}" placeholder="Nombre del Software" type="text" autocomplete="off" class="form-control mb-2">
+          </div>
+          <div class="col-md-6">
+            <label for="version_sw">Versión:</label>
+            <input name="version_sw" value="{{ sw_ofi['version']}}" placeholder="Versión" type="text" autocomplete="off" class="form-control mb-2">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label for="desarrollador_sw">Desarrollador:</label>
+            <input name="desarrollador_sw" value="{{ sw_ofi['desarrollador']}}" placeholder="Desarrollador" type="text" autocomplete="off" class="form-control mb-2">
+          </div>
+          <div class="col-md-6">
+            <label for="licencia_sw">Licencia:</label>
+            <input name="licencia_sw" value="{{ sw_ofi['licencia']}}" placeholder="Licencia" type="text" autocomplete="off" class="form-control mb-2">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <input name="categoria_sw" value="ofimatica" type="hidden">
+            <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+            <input name="id_sw" value="{{ sw_ofi['id_sw'] }}" type="hidden">
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    </fieldset>
+    <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addOfiForm()">Añadir otro</button>
+
+
+    <!-------- SEGURIDAD Y ANTIVIRUS ---------->
+    <fieldset id="seg-container" class="mb-4">
+        <legend>Seguridad y antivirus</legend>
+
+        {% for sw_seg in sw["segs"] %}
+        <div class="seg-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="nombre_sw">Nombre:</label>
+                <input name="nombre_sw" value="{{ sw_seg['nombre']}}" placeholder="Nombre del Software" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="version_sw">Versión:</label>
+                <input name="version_sw" value="{{ sw_seg['version']}}" placeholder="Versión" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="desarrollador_sw">Desarrollador:</label>
+                <input name="desarrollador_sw" value="{{ sw_seg['desarrollador']}}" placeholder="Desarrollador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="licencia_sw">Licencia:</label>
+                <input name="licencia_sw" value="{{ sw_seg['licencia']}}" placeholder="Licencia" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input name="categoria_sw" value="seguridad" type="hidden">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+                <input name="id_sw" value="{{ sw_seg['id_sw'] }}" type="hidden">
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </fieldset>
+    <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addSegForm()">Añadir otro</button>
+
+
+
+
+    <!-------- Otros ---------->
+    <fieldset id="otrosw-container" class="mb-4">
+        <legend>Demás programas</legend>
+
+        {% for sw_otro in sw["otros"] %}
+        <div class="otrosw-form">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="categoria_sw">Categoría:</label>
+                <select name="categoria_sw" class="form-control mb-2">
+                  <option selected value="">Ninguno</option>
+                  <option value="multimedia" {% if sw_otro["categoria"] == "multimedia" %} selected {% endif %}>Multimedia</option>
+                  <option value="diseño grafico" {% if sw_otro["categoria"] == "diseño grafico" %} selected {% endif %}>Diseño grafico</option>
+                  <option value="diseño audiovisual" {% if sw_otro["categoria"] == "diseño audiovisual" %} selected {% endif %}>Diseño Audiovisual</option>
+                  <option value="sistema" {% if sw_otro["categoria"] == "sistema" %} selected {% endif %}>Sistema</option>
+                  <option value="administrativo" {% if sw_otro["categoria"] == "administrativo" %} selected {% endif %}>Administrativo</option>
+                  <option value="comunicacion" {% if sw_otro["categoria"] == "comunicacion" %} selected {% endif %}>Comunicación</option>
+                  <option value="desarrollo" {% if sw_otro["categoria"] == "desarrollo" %} selected {% endif %}>Desarrollo</option>
+                  <option value="videojuego" {% if sw_otro["categoria"] == "videojuego" %} selected {% endif %}>Juegos</option>
+                  <option value="otro" {% if sw_otro["categoria"] == "otro" %} selected {% endif %}>Otro</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="nombre_sw">Nombre:</label>
+                <input name="nombre_sw" value="{{ sw_otro['nombre']}}" placeholder="Nombre del Software" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="version_sw">Versión:</label>
+                <input name="version_sw" value="{{ sw_otro['version']}}" placeholder="Versión" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <label for="desarrollador_sw">Desarrollador:</label>
+                <input name="desarrollador_sw" value="{{ sw_otro['desarrollador']}}" placeholder="Desarrollador" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="licencia_sw">Licencia:</label>
+                <input name="licencia_sw" value="{{ sw_otro['licencia']}}" placeholder="Licencia" type="text" autocomplete="off" class="form-control mb-2">
+              </div>
+              <div class="col-md-6">
+                <input name="id_equipo_hw" value="{{ id_equipo }}" type="hidden">
+                <input name="id_sw" value="{{ sw_otro['id_sw'] }}" type="hidden">              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </fieldset>
+    <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addOtroSwForm()">Añadir otro</button>
+    
+    </form>
+    <button form="items_form" type="submit" class="btn btn-primary my-4">Guardar</button>
+
+</div>
+
+
+<!-- JS dinamic form code -->
+<script src="/static/js/forms.js"> 
+
+</script>
+
+
+{% endblock %}
