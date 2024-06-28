@@ -1,10 +1,11 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, session
+from flask import Flask, flash, render_template, request, redirect, url_for, session, Response, make_response
 from flask_mysqldb import MySQL
 from flask_session import Session
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash
 from pymysql.cursors import DictCursor # for dictcursor
+
 
 # App configuration
 from config import config
@@ -45,9 +46,14 @@ def index():
     # Code to render the template with logged-in user information (if needed)
     # obtener lista de registros
     cursor = db.connection.cursor()
+    # Data de equipos
     cursor.execute("SELECT * FROM equipos WHERE id_user = %s", (session["user_id"],))
     equipos = cursor.fetchall()    
-    return render_template("index.html", equipos=equipos)
+    # Data de hardware
+    cursor.execute("SELECT * FROM hardware WHERE id_equipo IS NULL AND id_user = %s", (session["user_id"],))
+    hw_items = cursor.fetchall()
+
+    return render_template("index.html", equipos=equipos, items=hw_items)
 
 
 @app.route('/sign-up', methods=['GET', 'POST'])
@@ -56,7 +62,7 @@ def sign_up():
         return render_template('auth/sign-up.html')
 
     elif request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username').strip().lower()
         password = request.form.get('password')
 
         hash = generate_password_hash(password)
@@ -65,7 +71,9 @@ def sign_up():
             cursor.execute('''INSERT INTO users (username, hash) VALUES (%s, %s)''', (username, hash,))
 
         except Exception:
-            flash('Username already exits. Please choose a different username')
+            #flash('Username already exits. Please choose a different username')
+            flash('El usuario ya existe. Inicia sesión o elige otro')
+
             return render_template('auth/sign-up.html')
 
         db.connection.commit()
@@ -82,7 +90,7 @@ def login():
         return render_template("auth/login.html")
 
     elif request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username').strip().lower()
         password = request.form.get('password')
 
         try_user = User(0, username, password)
@@ -95,11 +103,13 @@ def login():
                 session["user_id"] = user.id
                 return redirect(url_for('index'))
             else:
-                flash('Invalid password')
+                # flash('Invalid password')
+                flash('Contraseña invalida')
                 return render_template('auth/login.html')
 
         else:
-            flash('User not found')
+            # flash('User not found')
+            flash('Usuario no encontrado')
             return render_template('auth/login.html')
 
 @app.route('/logout')   
@@ -343,7 +353,9 @@ def add_software(id_equipo):
                                     %s, %s
                                 ) WHERE id_user = %s
                            """, 
-                        (so["nombres"][i], so["ediciones"][i], so["arqs"][i], so["desarrolladores"][i], so["licencias"][i], id_equipo,))
+                        (so["nombres"][i].strip(), so["ediciones"][i].strip(), 
+                         so["arqs"][i].strip(), so["desarrolladores"][i].strip(), 
+                         so["licencias"][i].strip(), id_equipo,))
         
         # Insertar datos Programas
         for i in range(len(sw["nombres"])):
@@ -363,8 +375,9 @@ def add_software(id_equipo):
                                     %s, %s
                                 ) WHERE id_user = %s
                             """, 
-                            (sw["categorias"][i], sw["nombres"][i], sw["versiones"][i], sw["desarrolladores"][i], 
-                             sw["licencias"][i], id_equipo, session["user_id"]))
+                            (sw["categorias"][i].strip(), sw["nombres"][i].strip(), 
+                             sw["versiones"][i].strip(), sw["desarrolladores"][i].strip(), 
+                             sw["licencias"][i].strip(), id_equipo, session["user_id"]))
 
 
         # Registrar queries en la database
@@ -470,9 +483,10 @@ def edit_hardware(id):
                            WHERE id_hw = %s
                            AND id_user = %s
                            """,
-                           (hw["marcas"][i], hw["modelos"][i], 
-                            hw["n_series"][i], hw["specs"][i], 
-                            hw["capacidades"][i], hw["tipos"][i], hw["ids"][i], session["user_id"]))
+                           (hw["marcas"][i].strip(), hw["modelos"][i].strip(), 
+                            hw["n_series"][i].strip(), hw["specs"][i].strip(), 
+                            hw["capacidades"][i].strip(), hw["tipos"][i].strip(), 
+                            hw["ids"][i], session["user_id"]))
             
         # Registrar queries en la databasework
         db.connection.commit()
@@ -588,9 +602,9 @@ def edit_software(id):
                                     %s, %s, 
                                     %s, %s)
                             """, 
-                            (so["nombre"][i], so["edicion"][i], 
-                            so["arq"][i], so["desarrollador"][i], 
-                            so["licencia"][i], id, session["user_id"],))
+                            (so["nombre"][i].strip(), so["edicion"][i].strip(), 
+                            so["arq"][i].strip(), so["desarrollador"][i].strip(), 
+                            so["licencia"][i].strip(), id, session["user_id"],))
                 
             elif so["ids"][i]:
                 # Generar query.
@@ -604,9 +618,9 @@ def edit_software(id):
                             WHERE id_so = %s
                             AND id_user = %s
                             """,
-                            (so["nombre"][i], so["edicion"][i], 
-                                so["arq"][i], so["desarrollador"][i], 
-                                so["licencia"][i], so["ids"][i], session["user_id"]))
+                            (so["nombre"][i].strip(), so["edicion"][i].strip(), 
+                                so["arq"][i].strip(), so["desarrollador"][i].strip(), 
+                                so["licencia"][i].strip(), so["ids"][i], session["user_id"]))
 
         for i in range(len(sw["nombre"])):
             if not sw["ids"][i]:
@@ -620,9 +634,9 @@ def edit_software(id):
                                     %s, %s, 
                                     %s, %s, %s)
                                 """, 
-                                (sw["categoria"][i], sw["nombre"][i], 
-                                 sw["version"][i], sw["desarrollador"][i], 
-                                 sw["licencia"][i], id, session["user_id"],))
+                                (sw["categoria"][i].strip(), sw["nombre"][i].strip(), 
+                                 sw["version"][i].strip(), sw["desarrollador"][i].strip(), 
+                                 sw["licencia"][i].strip(), id, session["user_id"],))
 
             elif sw["ids"][i]:
                 # Generar query.
@@ -636,9 +650,9 @@ def edit_software(id):
                             WHERE id_sw = %s
                             AND id_user = %s
                             """,
-                            (sw["categoria"][i], sw["nombre"][i], 
-                                sw["version"][i], sw["desarrollador"][i], 
-                                sw["licencia"][i], sw["ids"][i], session["user_id"],))
+                            (sw["categoria"][i].strip(), sw["nombre"][i].strip(), 
+                                sw["version"][i].strip(), sw["desarrollador"][i].strip(), 
+                                sw["licencia"][i].strip(), sw["ids"][i], session["user_id"],))
 
         # Registrar queries en la database
         db.connection.commit()
@@ -742,14 +756,14 @@ def add_hw_item():
 
 
 # ----- VER REGISTROS DE HARDWARES SIN EQUIPO
-@app.route("/view-hw-items")
+@app.route("/dashboard-hw")
 @login_required
-def view_hw_items():
+def dashboard_hw():
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM hardware WHERE id_equipo IS NULL AND id_user = %s", (session["user_id"],))
     items = cursor.fetchall()
 
-    return render_template("view-hw-items.html", items=items)
+    return render_template("dashboard-hw.html", items=items)
 
 
 # ----- ELIMINAR REGISTRO DE HARDWARE SIN EQUIPO -------------
@@ -759,7 +773,7 @@ def delete_hw_item(id):
     cursor = db.connection.cursor()
     cursor.execute("DELETE FROM hardware WHERE id_hw = %s AND id_user = %s", (id, session["user_id"],))
     db.connection.commit()
-    return redirect(url_for("view_hw_items"))
+    return redirect(url_for("dashboard-hw"))
 
 
 @app.route('/home')
@@ -768,10 +782,56 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/dash')
-def dash():
-    return render_template('dashboard.html')
+@app.route('/dashboard-equipos')
+def dashboard_equipos():
+    if not is_logged_in():
+        return redirect(url_for('login'))
+    # Code to render the template with logged-in user information (if needed)
+    # obtener lista de registros
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT * FROM equipos WHERE id_user = %s", (session["user_id"],))
+    equipos = cursor.fetchall()    
+    return render_template('dashboard-equipos.html', equipos=equipos)
 
+
+# Sample data for demonstration
+# For exporting data
+from io import StringIO
+import csv as cs
+
+@app.route("/csv", methods=["GET", "POST"])
+def csv():	
+	return render_template("csv.html")
+
+
+@app.route("/export_csv", methods=["POST"])
+def export_data():
+  # Connect to MySQL database
+    cursor = db.connection.cursor()
+    # Data de equipos
+    cursor.execute("SELECT * FROM equipos WHERE id_user = %s", (session["user_id"],))
+    equipos = cursor.fetchall()    
+    # Data de hardware
+    cursor.execute("SELECT * FROM hardware WHERE id_equipo IS NULL AND id_user = %s", (session["user_id"],))
+    hardware = cursor.fetchall()
+
+    # Create a StringIO object to hold the CSV data
+    csv_buffer = StringIO()
+    fieldnames = [key for key in equipos[0]]
+
+    writer = cs.DictWriter(csv_buffer, fieldnames=fieldnames)
+    writer.writeheader()  
+
+    # Write the data to the buffer
+    for _ in equipos:
+        writer.writerow(_)
+
+    # Set response headers
+    response = make_response(csv_buffer.getvalue())
+    response.headers["Content-Disposition"] = "attachment;filename=hardware_software.csv"
+    response.headers["Content-Type"] = "text/csv"
+
+    return response
 
 def status_401(error):
     return redirect(url_for('login'))

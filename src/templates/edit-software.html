@@ -1,9 +1,9 @@
-{% extends "layout.html" %}
+{% extends "dash.html" %}
 
-{% block body %}
+{% block section %}
 
 <div class="container-fluid">
-    <h1>Registrar componentes de software</h1>
+    <h2>Registrar componentes de software</h2>
     <form action="/edit-software/{{ id_equipo }}" method="post" id="items_form">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       

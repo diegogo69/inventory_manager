@@ -1,9 +1,9 @@
-{% extends "layout.html" %}
+{% extends "dash.html" %}
 
-{% block body %}
+{% block section %}
 <div class="container">
 
-    <h1 style="text-align: center">Añadir un hardware sin equipo.</h1>
+    <h2 style="text-align: center">Añadir un hardware sin equipo.</h2>
 
     <form action="/add-hw-item" method="post" class="row">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

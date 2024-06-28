@@ -1,10 +1,10 @@
-{% extends "layout.html" %}
+{% extends "dash.html" %}
 
-{% block body %}
+{% block section %}
 <div class="container">
-    <a href="/add-hw-item">Añadir un componente de hardware por separado (sin equipo)</a>
+    <!-- <a href="/add-hw-item">Añadir un componente de hardware por separado (sin equipo)</a> -->
     
-    <h1 style="text-align: center">Datos generales del equipo</h1>
+    <h2 style="text-align: center">Datos generales del equipo</h2>
     <form action="/add-register" method="post" class="row">
       
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

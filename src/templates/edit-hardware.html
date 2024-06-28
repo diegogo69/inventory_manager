@@ -1,9 +1,9 @@
-{% extends "layout.html" %}
+{% extends "dash.html" %}
 
-{% block body %}
+{% block section %}
 
 <div class="container-fluid">
-    <h1>Editar componentes de hardware</h1>
+    <h2>Editar componentes de hardware</h2>
     <form action="/edit-hardware/{{ id_equipo }}" method="post" id="hw_form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 

@@ -1,8 +1,9 @@
-{% extends "layout.html" %}
+{% extends "dash.html" %}
 
-{% block body %}
+{% block section %}
 
 <div class="container">
+    <h2 style="text-align: center">Datos generales del equipo</h2>
     <form action="/edit-register/{{ registro['id_equipo']}}" method="post" class="row">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
