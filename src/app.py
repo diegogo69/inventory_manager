@@ -5,10 +5,10 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash
 from pymysql.cursors import DictCursor # for dictcursor
+import sys
 
 # Import functions for database operations
 from db_operations import *
-
 
 # App configuration
 from config import config
@@ -18,23 +18,29 @@ from models.modelUser import ModelUser
 from models.entities.user import User
 
 app = Flask(__name__)
-
-# Authentication token
-csrf = CSRFProtect()
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+# Authentication token
+csrf = CSRFProtect()
+
 # Connection de database
 db = MySQL(app)
+
 # Initialize login manager
 login_app = LoginManager(app)
 
 
 @login_app.user_loader
 def load_user(id):
-    return ModelUser.get_by_id(db, id)
+    # Error handling for database connection
+    try:
+        return ModelUser.get_by_id(db, id)
+    except Exception:
+        print("Ha ocurrido un error al conectar con la base de datos")
+        sys.exit()
 
 
 def is_logged_in():
