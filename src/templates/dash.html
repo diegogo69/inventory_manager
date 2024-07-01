@@ -189,13 +189,13 @@
               </h6>
               <ul class="nav flex-column mb-auto">
                 <li class="nav-item">
-                  <a class="nav-link d-flex align-items-center gap-2" href="/dashboard-equipos">
+                  <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('dashboard_equipos')}}">
                     <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
                     Computadores
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link d-flex align-items-center gap-2" href="/dashboard-hw">
+                  <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('dashboard_hardware')}}">
                     <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
                     Hardware y periféricos
                   </a>
@@ -212,14 +212,14 @@
             </h6>
 
               <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2" href="/add-register">
+                <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('add_register')}}">
                   <svg class="bi"><use xlink:href="#file-earmark"/></svg>
                   Añadir computador
                 </a>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2" href="/add-hw-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('add_hw_item')}}">
                   <svg class="bi"><use xlink:href="#file-earmark"/></svg>
                   Añadir hardware
                 </a>
@@ -250,16 +250,17 @@
       <main class="flex-grow-1 col-md-9 ms-sm-auto col-lg-10 px-md-" >
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">{% block header %}{% endblock %}</h1>
-          <!-- <div class="btn-toolbar mb-2 mb-md-0">
+
+          <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-              <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+              {% block export1 %}
+              {% endblock %}
+              <!-- <form method="POST" action="/export_csv">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">            
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Exportar</button>
+              </form> -->
             </div>
-            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">
-              <svg class="bi"><use xlink:href="#calendar3"/></svg>
-              This week
-            </button>
-          </div> -->
+          </div>
         </div>
 
         <!-- <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> -->

@@ -2,6 +2,18 @@
 
 {% block title %}Ver registro{% endblock %}
 
+{% block header %}Ver registro{% endblock %}
+
+{% block export1 %}
+{% if datos['equipos'][0] %} 
+    <form method="POST" action="/export-registro">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">            
+      <input type="hidden" name="id_eq" value="{{datos['equipos'][0]['id_equipo']}}">
+      <button type="submit" class="btn btn-sm btn-outline-secondary">Exportar</button>
+    </form>
+  {% endif %}
+  {% endblock %}
+
 
 {% block section %}
 <div class="container-fluid">

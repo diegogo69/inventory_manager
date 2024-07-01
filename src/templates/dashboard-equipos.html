@@ -2,6 +2,16 @@
 
 {% block header %}Computadores{% endblock %}
 
+{% block export1 %}
+{% if equipos[0] %} 
+    <form method="POST" action="/export-equipos">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">            
+      <button type="submit" class="btn btn-sm btn-outline-secondary">Exportar</button>
+    </form>
+  {% endif %}
+  {% endblock %}
+
+
 {% block section %}
 {% if equipos[0] %}
 <h3 style="text-align: center;">Computadores registrados</h3>

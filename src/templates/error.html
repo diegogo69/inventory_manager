@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 
+{% block title %}Ha ocurrido un error{% endblock%}
+
 {% block body %}
 
 <div class="container">
     <h2>Ups, ha ocurrido un error</h2> 
-    <p>{{ msg }}</p>
+    <h5>{{ msg }}</h5>
     <a href="/">Volver</a>
 </div>
 {% endblock %}

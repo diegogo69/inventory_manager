@@ -143,6 +143,11 @@ def add_register():
 @app.route("/delete-register/<string:id>")
 @login_required
 def delete_register(id):
+    # Check if pc's id exists
+    valid = check_valid_registro(db, session, id)
+    if not valid:
+        return render_template("error.html", msg="El equipo no existe")        
+
     # Delete regiser function
     delete_register_db(db, session, id)
     return redirect(url_for("index"))
@@ -152,6 +157,11 @@ def delete_register(id):
 @app.route("/edit-register/<string:id>", methods=["GET", "POST"])
 @login_required
 def edit_register(id):
+    # Check if pc's id exists
+    valid = check_valid_registro(db, session, id)
+    if not valid:
+        return render_template("error.html", msg="El equipo no existe")        
+
     # Cargar formulario
     if request.method == "GET":
         cursor = db.connection.cursor()
@@ -179,6 +189,11 @@ def edit_register(id):
 @app.route("/add-hardware/<id_equipo>", methods=["GET", "POST"])
 @login_required
 def add_hardware(id_equipo):
+    # Check if pc's id exists
+    valid = check_valid_registro(db, session, id)
+    if not valid:
+        return render_template("error.html", msg="El equipo no existe")        
+
     # Cargar form
     if request.method == "GET":
         return render_template("add-hardware.html", id_equipo=id_equipo)
@@ -215,6 +230,11 @@ def add_hardware(id_equipo):
 @app.route("/add-software/<id_equipo>", methods=["GET", "POST"])
 @login_required
 def add_software(id_equipo):
+    # Check if pc's id exists
+    valid = check_valid_registro(db, session, id)
+    if not valid:
+        return render_template("error.html", msg="El equipo no existe")        
+
     if request.method == "GET":
         return render_template("add-software.html", id_equipo=id_equipo)
 
@@ -253,9 +273,28 @@ def add_software(id_equipo):
 @app.route("/edit-hardware/<id>", methods = ["GET", "POST"])
 @login_required
 def edit_hardware(id):
+    # Check if pc's id exists
+    valid = check_valid_registro(db, session, id)
+    if not valid:
+        return render_template("error.html", msg="El equipo no existe")        
 
     if request.method == "GET":
         hw = edit_hw_get(db, session, id)
+        print(hw, "HW")
+
+        # Check if there are hw registers for the pc
+        registers = False
+        for value in hw.values():
+            if not value:
+                continue
+            # If there are no hw registers. It nevers gets to to true
+            registers = True
+        print(registers)
+
+        # If not registers at all. Render template for add hw
+        if not registers:
+            return redirect(url_for("add_hardware", id_equipo=id))
+
         return render_template("edit-hardware.html", id_equipo = id, hw = hw)
 
     elif request.method == "POST":
@@ -287,8 +326,29 @@ def edit_hardware(id):
 @app.route("/edit-software/<id>", methods= ["GET", "POST"])
 @login_required
 def edit_software(id):
+    # Check if pc's id exists
+    valid = check_valid_registro(db, session, id)
+    if not valid:
+        return render_template("error.html", msg="El equipo no existe")        
+
     if request.method == "GET":
         sos, sw = edit_software_get(db, session, id)
+        print(sos, "SO")
+        print(sw, "SW")
+
+        # Check if there are so registers for the pc
+        registers = False
+        for value in sos[0].values():
+            if not value:
+                continue
+            # If there are no hw registers. It nevers gets to to true
+            registers = True
+        print(registers)
+
+        # If not registers at all. Render template for add hw
+        if not registers:
+            return redirect(url_for("add_software", id_equipo=id))
+
         return render_template("edit-software.html", id_equipo=id, sos=sos, sw=sw)
     
     # --- POST ---
@@ -337,6 +397,11 @@ def edit_software(id):
 @app.route("/ver-registro/<id_equipo>")
 @login_required
 def ver_registro(id_equipo):
+    # Check if pc's id exists
+    valid = check_valid_registro(db, session, id_equipo)
+    if not valid:
+        return render_template("error.html", msg="El equipo no existe")        
+
     # Get data from db function
     datos = ver_registro_db(db, session, id_equipo)
     return render_template("ver-registro.html", datos = datos)
@@ -379,14 +444,14 @@ def add_hw_item():
 
 
 # ----- VER REGISTROS DE HARDWARES SIN EQUIPO
-@app.route("/dashboard-hw")
+@app.route("/dashboard-hardware")
 @login_required
-def dashboard_hw():
+def dashboard_hardware():
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM hardware WHERE id_equipo IS NULL AND id_user = %s", (session["user_id"],))
     items = cursor.fetchall()
 
-    return render_template("dashboard-hw.html", items=items)
+    return render_template("dashboard-hardware.html", items=items)
 
 
 # ----- ELIMINAR REGISTRO DE HARDWARE SIN EQUIPO -------------
@@ -396,7 +461,7 @@ def delete_hw_item(id):
     cursor = db.connection.cursor()
     cursor.execute("DELETE FROM hardware WHERE id_hw = %s AND id_user = %s", (id, session["user_id"],))
     db.connection.commit()
-    return redirect(url_for("dashboard-hw"))
+    return redirect(url_for("dashboard-hardware"))
 
 
 @app.route('/home')
@@ -427,16 +492,12 @@ def csv():
 	return render_template("csv.html")
 
 
-@app.route("/export_csv", methods=["POST"])
-def export_data():
+@app.route("/export-equipos", methods=["POST"])
+def export_equipos():
   # Connect to MySQL database
     cursor = db.connection.cursor()
-    # Data de equipos
     cursor.execute("SELECT * FROM equipos WHERE id_user = %s", (session["user_id"],))
     equipos = cursor.fetchall()    
-    # Data de hardware
-    cursor.execute("SELECT * FROM hardware WHERE id_equipo IS NULL AND id_user = %s", (session["user_id"],))
-    hardware = cursor.fetchall()
 
     # Create a StringIO object to hold the CSV data
     csv_buffer = StringIO()
@@ -444,17 +505,87 @@ def export_data():
 
     writer = cs.DictWriter(csv_buffer, fieldnames=fieldnames)
     writer.writeheader()  
-
     # Write the data to the buffer
-    for _ in equipos:
-        writer.writerow(_)
+    for row in equipos:
+        writer.writerow(row)
 
     # Set response headers
     response = make_response(csv_buffer.getvalue())
     response.headers["Content-Disposition"] = "attachment;filename=hardware_software.csv"
     response.headers["Content-Type"] = "text/csv"
-
     return response
+
+
+@app.route("/export-hardware", methods=["POST"])
+def export_hardware():
+  # Connect to MySQL database
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT * FROM hardware WHERE id_equipo IS NULL AND id_user = %s", (session["user_id"],))
+    hardware = cursor.fetchall()
+
+    # Create a StringIO object to hold the CSV data
+    csv_buffer = StringIO()
+    fieldnames = [key for key in hardware[0]]
+
+    writer = cs.DictWriter(csv_buffer, fieldnames=fieldnames)
+    writer.writeheader()  
+    # Write the data to the buffer
+    for row in hardware:
+        writer.writerow(row)
+
+    # Set response headers
+    response = make_response(csv_buffer.getvalue())
+    response.headers["Content-Disposition"] = "attachment;filename=hardware_software.csv"
+    response.headers["Content-Type"] = "text/csv"
+    return response
+
+
+@app.route("/export-registro", methods=["POST"])
+def export_registro():
+  # Connect to MySQL database
+    id_equipo = request.form.get("id_eq")
+    datos = ver_registro_db(db, session, id_equipo)
+
+    # Create a StringIO object to hold the CSV data
+    csv_buffer = StringIO()
+    fieldnames = [key for key in datos['equipos'][0].keys()]
+
+    writer = cs.DictWriter(csv_buffer, fieldnames=fieldnames)
+    writer.writeheader()  
+    # Write the data to the buffer
+    for row in datos['equipos']:
+        writer.writerow(row)
+
+
+    if datos.get('hw'):
+        writer.writerow([])
+        row_header = [key for key in datos['hw'][0].keys()]
+        writer.writerow(row_header)
+        for row in datos['hw']:
+            writer.writerow(row)
+
+
+    if datos.get('so'):
+        writer.writerow([])
+        row_header = [key for key in datos['so'][0].keys()]
+        writer.writerow(row_header)
+        for row in datos['so']:
+            writer.writerow(row)
+            
+    if datos.get('sw'):
+        writer.writerow([])
+        row_header = [key for key in datos['sw'][0].keys()]
+        writer.writerow(row_header)
+        for row in datos['sw']:
+            writer.writerow(row)
+
+    # Set response headers
+    response = make_response(csv_buffer.getvalue())
+    response.headers["Content-Disposition"] = "attachment;filename=hardware_software.csv"
+    response.headers["Content-Type"] = "text/csv"
+    return response
+
+
 
 def status_401(error):
     return redirect(url_for('login'))

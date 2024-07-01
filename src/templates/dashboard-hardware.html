@@ -2,8 +2,19 @@
 
 {% block header %}Hardware y periféricos{% endblock %}
 
-{% block section %}
 
+{% block export1 %}
+{% if items[0] %}
+    <form method="POST" action="/export-hardware">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">            
+      <button type="submit" class="btn btn-sm btn-outline-secondary">Exportar</button>
+    </form>
+{% endif %}
+{% endblock %}
+
+
+
+{% block section %}
 {% if items[0] %}
 <h3 style="text-align: center;">Hardware registrado</h3>
 <table class="table table-striped table-sm table-hover table-bordered bg-white text-center align-middle my-3">

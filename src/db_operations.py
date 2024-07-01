@@ -387,3 +387,11 @@ def add_hw_item_db(db, session, hw):
     # Registrar queries en la database
     db.connection.commit()
     return True
+
+
+def check_valid_registro(db, session, id_equipo):  
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT id_equipo FROM equipos WHERE id_equipo = %s AND id_user = %s", (id_equipo, session["user_id"],))
+    id = cursor.fetchall()
+    print(id, "VALID")
+    return id
