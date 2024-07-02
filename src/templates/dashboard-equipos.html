@@ -1,4 +1,9 @@
-{% extends "dash.html" %}
+{% if theme == 'light' %} 
+  {% extends "layout.html" %}
+{% else %}
+  {% extends "layout-dark.html" %}
+{% endif %}
+
 
 {% block title %}Equipos{% endblock %}
 
@@ -18,7 +23,7 @@
 {% block section %}
 {% if equipos[0] %}
 <h3 style="text-align: center;">Computadores registrados</h3>
-<table class="table table-striped table-sm table-hover table-bordered bg-white text-center align-middle my-3">
+<table class="table table-striped table-sm table-hover table-bordered text-center align-middle my-3">
     <thead>
       <tr>
         <th scope="col">Nombre</th>

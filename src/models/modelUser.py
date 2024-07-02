@@ -7,12 +7,14 @@ class ModelUser():
 
         try:
             cursor = db.connection.cursor()
-            cursor.execute('''SELECT id_user, username, hash FROM users 
+            cursor.execute('''SELECT id_user, username, hash, theme FROM users 
                                 WHERE username = %s''', (user.username,))
             row = cursor.fetchone()
 
             if row != None:
-                user = User(row['id_user'], row['username'], User.check_password(row['hash'], user.password))
+                user = User(row['id_user'], row['username'], 
+                            User.check_password(row['hash'], user.password), 
+                            row['theme'])
                 return user
 
             else:

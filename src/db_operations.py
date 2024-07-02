@@ -1,3 +1,26 @@
+tipo_pc = ["pc", "laptop"]
+
+tipo_hw = [
+    'case',
+    'placa',
+    'cpu',
+    'ram',
+    'almacenamiento',
+    'fuente',
+    'monitor',
+    'teclado',
+    'mouse',
+    'impresora',
+    'red',
+    'bluetooth',
+    'webcam',
+    'escaner',
+    'altavoces',
+    'audifonos',
+    'otro'
+]
+
+
 def index_db(db, session):
     # Lista de registros para la pagina principal
     cursor = db.connection.cursor()

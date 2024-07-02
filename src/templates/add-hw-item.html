@@ -1,4 +1,9 @@
-{% extends "dash.html" %}
+{% if theme == 'light' %} 
+  {% extends "layout.html" %}
+{% else %}
+  {% extends "layout-dark.html" %}
+{% endif %}
+
 
 {% block title %}Añadir un hardware o periférico{% endblock %}
 

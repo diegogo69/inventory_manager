@@ -3,7 +3,8 @@ CREATE DATABASE inventario;
 CREATE TABLE users (
 	id_user INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
-    hash VARCHAR(255) NOT NULL
+    hash VARCHAR(255) NOT NULL,
+    theme VARCHAR(45) NOT NULL
     );
 
 CREATE TABLE equipos (

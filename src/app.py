@@ -31,6 +31,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+
 # Authentication token
 csrf = CSRFProtect()
 
@@ -60,7 +61,7 @@ def index():
     if not is_logged_in():
         return redirect(url_for('login'))
     equipos, hw_items = index_db(db, session)
-    return render_template("index.html", equipos=equipos, items=hw_items)
+    return render_template("index.html", equipos=equipos, items=hw_items, theme=session['theme'])
 
 
 # ----- SIGN UP ----- 
@@ -74,11 +75,12 @@ def sign_up():
         username = request.form.get('username').strip().lower()
         password = request.form.get('password')
         hash = generate_password_hash(password)
+        theme = "light"
 
         # Except inserting duplicates in the database
         cursor = db.connection.cursor()
         try:
-            cursor.execute('''INSERT INTO users (username, hash) VALUES (%s, %s)''', (username, hash,))
+            cursor.execute('''INSERT INTO users (username, hash, theme) VALUES (%s, %s, %s)''', (username, hash, theme,))
 
         except Exception:
             flash('El usuario ya existe. Inicia sesión o elige otro')
@@ -111,6 +113,7 @@ def login():
                 login_user(user)
                 session["username"] = user.username
                 session["user_id"] = user.id
+                session['theme'] = user.theme
                 return redirect(url_for('index'))
             # If false. The password is invalid
             else:
@@ -126,6 +129,11 @@ def login():
 # ----- LOG OUT -----
 @app.route('/logout')   
 def logout():
+    # Save user's color theme
+    cursor = db.connection.cursor()
+    cursor.execute("UPDATE users SET theme = %s WHERE id_user = %s", (session['theme'], session['user_id'],))
+    db.connection.commit()
+
     session.clear()
     logout_user()    
     return redirect(url_for('login'))
@@ -236,6 +244,10 @@ def add_hardware(id_equipo):
         hw["tipos"] = request.form.getlist("tipo_hw")
         print(len(hw["tipos"]), "tipo")
 
+        # If too many components are entered. Return error
+        if len(hw['marcas']) > 23:
+            return render_template("error.html", msg="Se superó el límite de registro de datos")        
+
         # If user did not entered any data. Return an error message
         if not hw["modelos"] and not hw["n_series"] and not hw["specs"] and not hw["capacidades"]:
             return render_template("error.html", msg="No agregaste ningún dato al registro")        
@@ -287,6 +299,12 @@ def add_software(id_equipo):
         print(len(sw["desarrolladores"]), "desarrollador")
         sw["licencias"] = request.form.getlist("licencia_sw")
         print(len(sw["licencias"]), "licencias")
+
+        # If too many components are entered. Return error
+        if len(so['nombres']) > 3:
+            return render_template("error.html", msg="Se superó el límite de registro de datos")        
+        if len(sw['nombres']) > 20:
+            return render_template("error.html", msg="Se superó el límite de registro de datos")        
 
         add_software_db(db, session, so, sw, id_equipo)
         return redirect(url_for("index"))
@@ -340,6 +358,10 @@ def edit_hardware(id):
         # ID del componente de Hardware
         hw["ids"] = request.form.getlist("id_hw")
         print(len(hw["ids"]), "ID's hardawares ")
+
+        # If too many components are entered. Return error
+        if len(hw['marcas']) > 23:
+            return render_template("error.html", msg="Se superó el límite de registro de datos")        
 
         edit_hw_post(db, session, hw)
         return redirect(url_for("edit_software", id=id))
@@ -456,6 +478,10 @@ def add_hw_item():
         hw["capacidades"] = request.form.getlist("capacidad_hw")
         print(len(hw["capacidades"]), "capacidad")
 
+        # If too many components are entered. Return error
+        if len(hw['marcas']) > 3:
+            return render_template("error.html", msg="Se superó el límite de registro de datos")        
+
         # Submit to data base. It returns false if no data was registered       
         registers = add_hw_item_db(db, session, hw)
         
@@ -526,7 +552,7 @@ def export_equipos():
 
     # Set response headers
     response = make_response(csv_buffer.getvalue())
-    response.headers["Content-Disposition"] = "attachment;filename=hardware_software.csv"
+    response.headers["Content-Disposition"] = "attachment;filename=registros_equipos.csv"
     response.headers["Content-Type"] = "text/csv"
     return response
 
@@ -552,7 +578,7 @@ def export_hardware():
 
     # Set response headers
     response = make_response(csv_buffer.getvalue())
-    response.headers["Content-Disposition"] = "attachment;filename=hardware_software.csv"
+    response.headers["Content-Disposition"] = "attachment;filename=registros_hardware.csv"
     response.headers["Content-Type"] = "text/csv"
     return response
 
@@ -577,33 +603,57 @@ def export_registro():
 
     # If there is hardware data
     if datos.get('hw'):
-        writer.writerow([])
+        writer.writerow({})
         row_header = [key for key in datos['hw'][0].keys()]
-        writer.writerow(row_header)
+        writer = csvv.DictWriter(csv_buffer, fieldnames=row_header)
+        writer.writeheader()  
+        # Write the data to the buffer
         for row in datos['hw']:
             writer.writerow(row)
 
     # If there is os data
     if datos.get('so'):
-        writer.writerow([])
+        writer.writerow({})
         row_header = [key for key in datos['so'][0].keys()]
-        writer.writerow(row_header)
+        writer = csvv.DictWriter(csv_buffer, fieldnames=row_header)
+        writer.writeheader()  
+        # Write the data to the buffer
         for row in datos['so']:
             writer.writerow(row)
             
     # If there is programs data
     if datos.get('sw'):
-        writer.writerow([])
+        writer.writerow({})
         row_header = [key for key in datos['sw'][0].keys()]
-        writer.writerow(row_header)
+        writer = csvv.DictWriter(csv_buffer, fieldnames=row_header)
+        writer.writeheader()  
+        # Write the data to the buffer
         for row in datos['sw']:
             writer.writerow(row)
 
     # Set response headers
     response = make_response(csv_buffer.getvalue())
-    response.headers["Content-Disposition"] = "attachment;filename=hardware_software.csv"
+    # Get name of the pc registered
+    pc_name = f"{datos['equipos'][0]['nombre']}"
+    response.headers["Content-Disposition"] = f"attachment;filename=registro_{pc_name}.csv"
     response.headers["Content-Type"] = "text/csv"
     return response
+
+
+# AJUSTES Y CONFIGURACION
+@app.route("/ajustes", methods=['GET', 'POST'])
+@login_required
+def ajustes():
+    if request.method == 'GET':
+        print(session['theme'], 'GET')
+        return render_template("ajustes.html", theme=session['theme'])
+    
+    elif request.method == 'POST':
+        color = request.form.get("color_mode")
+        if color:
+            session['theme'] = color
+        print(session['theme'], 'POST')
+        return render_template("ajustes.html", theme=session['theme'])
 
 
 def status_401(error):

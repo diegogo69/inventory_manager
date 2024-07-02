@@ -1,4 +1,8 @@
-{% extends "dash.html" %}
+{% if theme == 'light' %} 
+  {% extends "layout.html" %}
+{% else %}
+  {% extends "layout-dark.html" %}
+{% endif %}
 
 {% block title %}Ver registro{% endblock %}
 
@@ -19,8 +23,8 @@
 <div class="container-fluid">
     <h3 class="text-center mt-4">Datos del Equipo</h3>
     {% if datos['equipos'][0] %} 
-    <table class="table table-striped table-sm table-hover table-bordered bg-white text-center align-middle my-3">
-          <thead class="table-dark">
+    <table class="table table-striped table-sm table-hover table-bordered text-center align-middle my-3">
+          <thead>
             <td>Nombre</td>
             <td>Tipo</td>
             <td>Marca</td>
@@ -52,8 +56,8 @@
 
     <h3 class="text-center mt-4">Datos de componentes de hardware</h3>
     {% if datos['hw'][0] %} 
-    <table class="table table-striped table-sm table-hover table-bordered bg-white text-center align-middle my-3">
-        <thead class="table-dark">
+    <table class="table table-striped table-sm table-hover table-bordered text-center align-middle my-3">
+        <thead>
             <td>Tipo</td>
             <td>Marca</td>
             <td>Modelo</td>
@@ -81,8 +85,8 @@
 
     <h3 class="text-center mt-4">Datos de sistema operativo</h3>
     {% if datos['so'][0] %} 
-    <table class="table table-striped table-sm table-hover table-bordered bg-white text-center align-middle my-3">
-        <thead class="table-dark">
+    <table class="table table-striped table-sm table-hover table-bordered text-center align-middle my-3">
+        <thead>
             <td>Nombre</td>
             <td>Edicion</td>
             <td>Arquitectura</td>
@@ -108,8 +112,8 @@
 
     <h3 class="text-center mt-4">Datos de programas y software</h3>
     {% if datos['sw'][0] %} 
-    <table class="table table-striped table-sm table-hover table-bordered bg-white text-center align-middle my-3">
-        <thead class="table-dark">
+    <table class="table table-striped table-sm table-hover table-bordered text-center align-middle my-3">
+        <thead>
             <td>Categoria</td>
             <td>Nombre</td>
             <td>Version</td>
