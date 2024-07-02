@@ -6,6 +6,9 @@
 
 <div class="container-fluid">
     <h2>Editar componentes de hardware</h2>
+    <small>**El campo <strong>Capacidad</strong> aplica para dispositivos
+        de memoria (temporal o permanente)**</small>
+
     <form action="/edit-hardware/{{ id_equipo }}" method="post" id="hw_form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
@@ -85,7 +88,7 @@
             {% endfor %}
 
         </fieldset>
-        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addRamForm()">Añadir RAM</button>
+        <button type="button" class="btn btn-sm btn-success addFormBtn mb-2" onclick="addRamForm()">Añadir RAM</button>
 
 
         <!-------- ALMACENAMIENTO ---------->
@@ -133,7 +136,7 @@
             {% endfor %}
 
             </fieldset>
-            <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addAlmForm()">Añadir unidad</button>
+            <button type="button" class="btn btn-sm btn-success addFormBtn mb-2" onclick="addAlmForm()">Añadir unidad</button>
 
 
         <!-------- PLACA BASE ---------->
@@ -288,7 +291,7 @@
             </div>
             {% endfor %}
         </fieldset>
-        <!--       <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addMonForm()">Añadir monitor</button>
+        <!--       <button type="button" class="btn btn-sm btn-success addFormBtn mb-2" onclick="addMonForm()">Añadir monitor</button>
         -->      
     
         <!-------- TECLADO ---------->
@@ -452,7 +455,7 @@
             </div>
             {% endfor %}
         </fieldset>
-        <button type="button" class="btn btn-sm btn-success addFormBtn" onclick="addOtroForm()">Añadir otro</button>
+        <button type="button" class="btn btn-sm btn-success addFormBtn mb-2" onclick="addOtroForm()">Añadir otro</button>
 
     </form>
 

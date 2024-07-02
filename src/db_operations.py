@@ -363,12 +363,13 @@ def add_hw_item_db(db, session, hw):
     # Insertar datos uno a uno
     for i in range(len(hw["capacidades"])):
 
+        tipo = hw["tipos"][i].strip()
+        estado = hw["estados"][i].strip()
         marca = hw["marcas"][i].strip()
         modelo = hw["modelos"][i].strip()
         n_serie = hw["n_series"][i].strip()
         specs = hw["specs"][i].strip()
         capacidad = hw["capacidades"][i].strip()
-        tipo = hw["tipos"][i].strip()
 
         # si no hay ningun dato. no registrar
         if (not marca or marca == "intel") and not modelo and not n_serie and not specs and not capacidad:
@@ -377,9 +378,9 @@ def add_hw_item_db(db, session, hw):
             registers += 1
         
         # Generar query.
-        cursor.execute("""INSERT INTO hardware (marca, modelo, n_serie, especificaciones, capacidad, tipo, id_user) 
-                            VALUES (%s, %s, %s, %s, %s, %s)""", 
-                        (marca, modelo, n_serie, specs, capacidad, tipo, session["user_id"],))
+        cursor.execute("""INSERT INTO hardware (marca, modelo, n_serie, especificaciones, capacidad, tipo, estado, id_user) 
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""", 
+                        (marca, modelo, n_serie, specs, capacidad, tipo, estado, session["user_id"],))
     # Si no hay registros
     if registers == 0:
         return False

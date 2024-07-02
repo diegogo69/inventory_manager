@@ -28,6 +28,7 @@ CREATE TABLE hardware (
     n_serie VARCHAR(50),
     especificaciones VARCHAR(255),
     capacidad VARCHAR(50),
+    estado VARCHAR(50),
     id_equipo INT,
     id_user INT,
     FOREIGN KEY(id_user) REFERENCES users(id_user),

@@ -1,5 +1,7 @@
 {% extends "dash.html" %}
 
+{% block title %}Hardware{% endblock %}
+
 {% block header %}Hardware y periféricos{% endblock %}
 
 
@@ -21,6 +23,7 @@
     <thead>
       <tr>
         <th scope="col">Tipo</th>
+        <th scope="col">Estado</th>
         <th scope="col">Marca</th>
         <th scope="col">Modelo</th>
         <th scope="col">N° serie</th>
@@ -33,6 +36,7 @@
       {% for item in items %}
       <tr>
         <td>{{ item["tipo"] }}</td>
+        <td>{{ item["estado"] }}</td>
         <td>{{ item["marca"] }}</td>
         <td>{{ item["modelo"] }}</td>
         <td>{{ item["n_serie"] }}</td>

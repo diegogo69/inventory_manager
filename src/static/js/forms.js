@@ -293,7 +293,7 @@ function addHwItemForm() {
     formItem.innerHTML = `
         <h5 class="my-2">Item N° ${n_hwitem + 1}</h5>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="tipo_hw">Tipo:</label>
                         <select name="tipo_hw" class="form-control mb-2">
                             <option value="case">Case</option>
@@ -318,6 +318,14 @@ function addHwItemForm() {
                             <option value="otro">Otro</option>
                         </select>
                     </div>
+                    <div class="col-md-3">
+                        <label for="estado_hw">Estado:</label>
+                        <select name="estado_hw" class="form-control mb-2">
+                          <option value="funcional">Funcional</option>
+                          <option value="dañado">Dañado</option>
+                        </select>
+                      </div>
+                
                     <div class="col-md-6">
                         <label for="marca_hw">Marca:</label>
                         <input name="marca_hw" placeholder="Marca" type="text" autocomplete="off" class="form-control mb-2">
