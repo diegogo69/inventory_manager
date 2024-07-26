@@ -7,7 +7,7 @@ from pymysql.cursors import DictCursor
 from flask_session import Session
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 # Export to CSV files
 from io import StringIO
 import csv as csvv
@@ -74,6 +74,20 @@ def sign_up():
         # User's data
         username = request.form.get('username').strip().lower()
         password = request.form.get('password')
+        confirm = request.form.get('confirm')
+
+        if not username and not password and not confirm:
+            flash('No se ingresó ningún dato')
+            return render_template('auth/sign-up.html')
+
+        if not username or not password or not confirm:
+            flash('Faltaron campos por completar')
+            return render_template('auth/sign-up.html')
+
+        if confirm != password:
+            flash('La contraseña no coincide')
+            return render_template('auth/sign-up.html')
+
         hash = generate_password_hash(password)
         theme = "light"
 
@@ -101,6 +115,14 @@ def login():
     elif request.method == 'POST':
         username = request.form.get('username').strip().lower()
         password = request.form.get('password')
+
+        if not username and not password:
+            flash('No se ingresó ningún dato')
+            return render_template('auth/sign-up.html')
+
+        if not username or not password:
+            flash('Faltaron campos por completar')
+            return render_template('auth/sign-up.html')
 
         # Create user object with built in methods and properties
         user_ = User(0, username, password)
@@ -133,7 +155,6 @@ def logout():
     cursor = db.connection.cursor()
     cursor.execute("UPDATE users SET theme = %s WHERE id_user = %s", (session['theme'], session['user_id'],))
     db.connection.commit()
-
     session.clear()
     logout_user()    
     return redirect(url_for('login'))
@@ -145,7 +166,7 @@ def logout():
 def add_register():
     if request.method == "GET":
         # Return form
-        return render_template("add-register.html")
+        return render_template("add-register.html", theme=session['theme'])
     
     elif request.method == "POST":
         # Process form data
@@ -196,7 +217,7 @@ def edit_register(id):
         cursor = db.connection.cursor()
         cursor.execute("SELECT * FROM equipos WHERE id_equipo = %s AND id_user = %s", (id, session["user_id"],))
         registro = cursor.fetchall()
-        return render_template("edit-register.html", registro=registro[0])
+        return render_template("edit-register.html", registro=registro[0], theme=session['theme'])
 
     # Process formulario
     elif request.method == "POST":
@@ -225,7 +246,7 @@ def add_hardware(id_equipo):
 
     # Cargar form
     if request.method == "GET":
-        return render_template("add-hardware.html", id_equipo=id_equipo)
+        return render_template("add-hardware.html", id_equipo=id_equipo, theme=session['theme'])
         
     # Process form
     elif request.method == "POST":
@@ -271,7 +292,7 @@ def add_software(id_equipo):
         return render_template("error.html", msg="El equipo no existe")        
 
     if request.method == "GET":
-        return render_template("add-software.html", id_equipo=id_equipo)
+        return render_template("add-software.html", id_equipo=id_equipo, theme=session['theme'])
 
     elif request.method == "POST":
         so = {}
@@ -337,7 +358,7 @@ def edit_hardware(id):
         if not registers:
             return redirect(url_for("add_hardware", id_equipo=id))
 
-        return render_template("edit-hardware.html", id_equipo = id, hw = hw)
+        return render_template("edit-hardware.html", id_equipo = id, hw = hw, theme=session['theme'])
 
     elif request.method == "POST":
 
@@ -395,7 +416,7 @@ def edit_software(id):
         if not registers:
             return redirect(url_for("add_software", id_equipo=id))
 
-        return render_template("edit-software.html", id_equipo=id, sos=sos, sw=sw)
+        return render_template("edit-software.html", id_equipo=id, sos=sos, sw=sw, theme=session['theme'])
     
     # Submit data to database
     elif request.method == "POST":
@@ -450,7 +471,7 @@ def ver_registro(id_equipo):
 
     # Get data from db function
     datos = ver_registro_db(db, session, id_equipo)
-    return render_template("ver-registro.html", datos = datos)
+    return render_template("ver-registro.html", datos = datos, theme=session['theme'])
 
 # --- ADD A NON PC HARDWARE COMPONENT OR PERIPHERAL ---
 @app.route("/add-hw-item", methods = ["GET", "POST"])
@@ -458,7 +479,7 @@ def ver_registro(id_equipo):
 def add_hw_item():
     if request.method == "GET":
         # show form
-        return render_template("add-hw-item.html")
+        return render_template("add-hw-item.html", theme=session['theme'])
     
     elif request.method == "POST":
         hw = {}
@@ -499,7 +520,7 @@ def dashboard_hardware():
     cursor.execute("SELECT * FROM hardware WHERE id_equipo IS NULL AND id_user = %s", (session["user_id"],))
     items = cursor.fetchall()
 
-    return render_template("dashboard-hardware.html", items=items)
+    return render_template("dashboard-hardware.html", items=items, theme=session['theme'])
 
 
 # ----- DELETE NON PC HARDWARE COMPONENT -------------
@@ -527,7 +548,7 @@ def dashboard_equipos():
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM equipos WHERE id_user = %s", (session["user_id"],))
     equipos = cursor.fetchall()    
-    return render_template('dashboard-equipos.html', equipos=equipos)
+    return render_template('dashboard-equipos.html', equipos=equipos, theme=session['theme'])
 
 
 # -- EXPORT PC REGISTERS DATA --
@@ -654,6 +675,47 @@ def ajustes():
             session['theme'] = color
         print(session['theme'], 'POST')
         return render_template("ajustes.html", theme=session['theme'])
+
+
+
+@app.route("/change-password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    if request.method == 'GET':
+        return render_template('auth/change-password.html', theme=session['theme'])
+
+    if request.method == "POST":
+        password = request.form.get("password")
+        new_pass = request.form.get("new_password")
+        confirm = request.form.get("confirm")
+
+        if not password and not new_pass and not confirm:
+            flash('No se ingresó ningún dato')
+            return render_template('auth/change-password.html', theme=session['theme'])
+
+        if not password or not password or not confirm:
+            flash('Faltaron campos por completar')
+            return render_template('auth/change-password.html', theme=session['theme'])
+        
+        if confirm != new_pass:
+            flash('La nueva contraseña no coincide')
+            return render_template('auth/change-password.html', theme=session['theme'])
+
+        new_hash = generate_password_hash(new_pass)
+
+        cursor = db.connection.cursor()
+        cursor.execute("SELECT hash FROM users WHERE id_user = %s", (session["user_id"],))
+        user_hash = cursor.fetchone()
+
+        if not(check_password_hash(user_hash['hash'], password)):
+            flash('Se necesita tu contraseña actual para autenticar')
+            return render_template('auth/change-password.html', theme=session['theme'])
+
+        cursor.execute("UPDATE users SET hash = %s WHERE id_user = %s", (new_hash, session["user_id"],))
+        db.connection.commit()
+
+        flash('Se cambió la contraseña correctamente')
+        return render_template('auth/change-password.html', theme=session['theme'])
 
 
 def status_401(error):
