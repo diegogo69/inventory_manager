@@ -40,10 +40,10 @@
     <tbody>
       {% for item in items %}
       <tr>
-        <td>{{ item["tipo"] }}</td>
-        <td>{{ item["estado"] }}</td>
-        <td>{{ item["marca"] }}</td>
-        <td>{{ item["modelo"] }}</td>
+        <td>{{ item["tipo"].title() }}</td>
+        <td>{{ item["estado"].title() }}</td>
+        <td>{{ item["marca"].title() }}</td>
+        <td>{{ item["modelo"].title() }}</td>
         <td>{{ item["n_serie"] }}</td>
         <td>{{ item["especificaciones"] }}</td>
         <td>{{ item["capacidad"] }}</td>
