@@ -13,13 +13,10 @@ from io import StringIO
 import csv as csvv
 # SYS for aborting the programs
 import sys
-
 # Import functions for database operations
 from db_operations import *
-
 # App configuration
 from config import config
-
 # Classes and helper methods
 from models.modelUser import ModelUser
 from models.entities.user import User
@@ -578,7 +575,7 @@ def export_equipos():
     return response
 
 
-# EXPORT NON PC HARDWARE REGISTERS
+# ---- EXPORT NON PC HARDWARE REGISTERS ---
 @app.route("/export-hardware", methods=["POST"])
 @login_required
 def export_hardware():
@@ -604,7 +601,7 @@ def export_hardware():
     return response
 
 
-# EXPORT A PC REGISTER
+# ----- EXPORT A PC REGISTER -----
 @app.route("/export-registro", methods=["POST"])
 @login_required
 def export_registro():
@@ -661,7 +658,7 @@ def export_registro():
     return response
 
 
-# AJUSTES Y CONFIGURACION
+# --- SETTINGS ---
 @app.route("/ajustes", methods=['GET', 'POST'])
 @login_required
 def ajustes():
@@ -677,7 +674,7 @@ def ajustes():
         return render_template("ajustes.html", theme=session['theme'])
 
 
-
+# ----- CHANGE PASSWORD -----
 @app.route("/change-password", methods=["GET", "POST"])
 @login_required
 def change_password():
@@ -724,7 +721,7 @@ def status_401(error):
 def status_404(error):
     return "<h1>Pagina no encontrada</h1>"
 
-    
+
 if __name__ == '__main__':
     app.config.from_object(config['development'])
     csrf.init_app(app)
